@@ -1,0 +1,83 @@
+<html>
+
+<head>
+    <script src="..\common\ethers-keccak.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>Function selector</h2>
+    </div>
+    <div id="content">
+        <div class="flex-container">
+            <div class="flex-child">
+                <label for="prototype">Prototype</label>
+                <input type="text" id="prototype" name="prototype">
+            </div>
+            <div class="flex-child">
+                <button id="btn" class="button"><span>Get Hash </span></button>
+            </div>
+        </div>
+        <div id="hash"></div>
+        <div class="flex-container">
+            <div class="flex-child">
+                <div>
+                    <label for="selector">Function Selector</label>
+                    <input type="text" id="selector" name="selector">
+                </div>
+            </div>
+            <div class="flex-child">
+                <button id="check-btn" class="button"><span>Check </span></button>
+            </div>
+        </div>
+        <div class="alert" id="alert"></div>
+        <div class="success" id="success"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let btn = document.querySelector('#btn');
+            let prototype = document.querySelector('#prototype');
+            let hash = document.querySelector('#hash');
+            let selector = document.querySelector('#selector');
+            let alert = document.querySelector('#alert');
+            let check_btn = document.querySelector('#check-btn');
+            let success = document.querySelector('#success');
+            btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                if (prototype.value) {
+                    try {
+                        console.log(etherskeccak.keccak256(utils.toUtf8Bytes("withdraw(uint256)")));
+                        //var abi = ["function withdraw(uint256)"];
+                        //var iface = new ethers.utils.Interface(abi);
+                        //var id = iface.getSighash('withdraw');
+                        let hashVal = etherskeccak.keccak256(utils.toUtf8Bytes(prototype.value));
+                        hash.innerHTML = "Hash: " + hashVal;
+                    } catch (err) {
+                        alert.innerHTML = "Sorry, something wrong!";
+                    }
+                } else {
+                    alert.innerHTML = "Insert Prototype";
+                }
+            });
+
+            check_btn.addEventListener('click', function (event) {
+                success.innerHTML = "";
+                alert.innerHTML = "";
+                selector.classList.remove("ok");
+                selector.classList.remove("ko");
+                let hashVal = etherskeccak.keccak256(utils.toUtf8Bytes(prototype.value));
+                let solution = hashVal.substring(0, 10);
+                if (selector && selector.value == solution) {
+                    selector.classList.add("ok");
+                    success.innerHTML = "Wonderful, this is the correct function selector!";
+                } else {
+                    selector.classList.add("ko");
+                    alert.innerHTML = "This is not the correct function selector!";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

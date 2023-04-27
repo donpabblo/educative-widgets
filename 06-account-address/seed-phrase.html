@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <script src="..\common\ethers.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>Seed Phrase</h2>
+    </div>
+    <div id="content">
+        <button id="gen-btn" class="button"><span>Generate </span></button>
+        <div>
+            <label for="mnemonic">Mnemonic</label>
+            <input type="text" id="mnemonic" name="mnemonic">
+        </div>
+        <div>
+            <label for="privatekey">Private Key</label>
+            <input type="text" id="privatekey" name="privatekey" disabled>
+        </div>
+        <div class="alert" id="alert"></div>
+        <div class="success" id="success"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let privatekey = document.querySelector('#privatekey');
+            let mnemonic = document.querySelector('#mnemonic');
+            let gen_btn = document.querySelector('#gen-btn');
+            let alert = document.querySelector('#alert');
+            let success = document.querySelector('#success');
+            gen_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                try {
+                    var wallet = new ethers.Wallet.createRandom();
+                    privatekey.value = wallet.privateKey;
+                    mnemonic.value = wallet.mnemonic.phrase;
+                } catch (err) {
+                    alert.innerHTML = "Sorry, something wrong!";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

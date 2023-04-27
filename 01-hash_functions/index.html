@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <!--<script src="..\common\keccak256.js"></script>-->
+    <script src="..\common\ethers-keccak.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div><h2>Hash Function (keccak256)</h2></div>
+    <div id="content">
+        <div>
+            <label for="input">Input</label>
+            <input type="text" id="input" name="input">
+        </div>
+        <div>
+            <label for="output">Keccak-256 hash</label>
+            <input type="text" id="output" name="output" disabled>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let output = document.querySelector('#output');
+            let input = document.querySelector('#input');
+            // Handle changes
+            input.addEventListener('input', function () {
+                let val = input.value;
+                //output.value = keccak256(val).toString('hex');
+                output.value = etherskeccak.keccak256(utils.toUtf8Bytes(val)).substring(2);
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <!-- <script src="..\common\ethers.js"></script> -->
+    <script src="..\common\ethers-keccak.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>EOA Account</h2>
+    </div>
+    <div id="content">
+        <div>
+            <label for="publickey">Public Key</label>
+            <input type="text" id="publickey" name="publickey">
+        </div>
+        <button id="hash-btn" class="button"><span>Keccak256</span></button>
+        <div>
+            <label for="hash">Hash</label>
+            <input type="text" id="hash" name="hash">
+        </div>
+        <div>
+            <label for="hash">Address</label>
+            <input type="text" id="address" name="address" placeholder="Insert address">
+        </div>
+        <button id="check-btn" class="button"><span>Check</span></button>
+        <div class="alert" id="alert"></div>
+        <div class="success" id="success"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            //0x0447c248898f78638fc1095fe4e196d915e7dc7fa08eeac2c27bcf37c0eeaa7c001ad5e23bbbce32a040a9e71f0a337b033fb562db63a35841ebfcd6f0d6e259f9
+            //0x1e241cd1f320b30ae4aab342367d8f0b5ead6d52
+            var addressResult = undefined;
+            let publickey = document.querySelector('#publickey');
+            let hashVal = document.querySelector('#hash');
+            let addressVal = document.querySelector('#address');
+            let hash_btn = document.querySelector('#hash-btn');
+            let check_btn = document.querySelector('#check-btn');
+            let alert = document.querySelector('#alert');
+            let success = document.querySelector('#success');
+            hash_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                try {
+                    var hash = etherskeccak.keccak256(utils.hexDataSlice(publickey.value, 1));
+                    addressResult = '0x' + hash.substring(26);
+                    hashVal.value = hash;
+                } catch (err) {
+                    alert.innerHTML = "Sorry, something wrong!";
+                }
+            });
+
+            check_btn.addEventListener('click', function (event) {
+                success.innerHTML = "";
+                alert.innerHTML = "";
+                addressVal.classList.remove("ok");
+                addressVal.classList.remove("ko");
+                if (addressResult && addressVal.value == addressResult) {
+                    addressVal.classList.add("ok");
+                    success.innerHTML = "Wonderful, this is the correct address!";
+                } else {
+                    addressVal.classList.add("ko");
+                    alert.innerHTML = "This is not the correct address!";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

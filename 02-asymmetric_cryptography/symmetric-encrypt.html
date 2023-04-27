@@ -1,0 +1,67 @@
+<html>
+
+<head>
+    <script src="..\common\crypto-js.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div><h2>Symmetric Encrypt</h2></div>
+    <div id="content">
+        <div>
+            <label for="key">Key*</label>
+            <input type="text" id="key" name="key">
+        </div>
+        <div>
+            <label for="message">Message*</label>
+            <input type="text" id="message" name="message">
+        </div>
+        <div class='parent'>
+            <div class='btn-child'>
+                <button id="button" class="button" style="vertical-align:middle"><span>Encrypt </span></button>
+            </div>
+            <div class='text-child'>
+                <label for="encrypted">Encrypted Message</label>
+                <input type="text" id="encrypted" name="encrypted" disabled>
+            </div>
+        </div>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        function toHex(str) {
+            var hex, i;
+            var result = "";
+            for (i = 0; i < str.length; i++) {
+                hex = str.charCodeAt(i).toString(16);
+                result += ("000" + hex).slice(-4);
+            }
+            return result
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let key = document.querySelector('#key');
+            let message = document.querySelector('#message');
+            let encrypted = document.querySelector('#encrypted');
+            let alert = document.querySelector('#alert');
+            let btn = document.querySelector('#button');
+            btn.addEventListener('click', function (event) {
+                alert.innerHTML = '';
+                if (key.value && message.value) {
+                    try {
+                        const keyutf = CryptoJS.enc.Utf8.parse(toHex(key.value));
+                        const iv = CryptoJS.enc.Base64.parse(toHex(key.value));
+                        let encryptedMsg = CryptoJS.AES.encrypt(message.value, keyutf, { iv });
+                        encrypted.value = encryptedMsg.toString();
+                    } catch (err) {
+                        console.log(err.message);
+                    }
+                } else {
+                    alert.innerHTML = "Key or Message are missing!";
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<html>
+
+<head>
+    <script src="..\common\elliptic.js"></script>
+    <!--<script src="..\common\keccak256.js"></script>-->
+    <script src="..\common\ethers-keccak.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div><h2>Message Signing</h2></div>
+    <div id="content">
+        <div>
+            <label for="message">Message</label>
+            <input type="text" id="message" name="message">
+        </div>
+        <div class='parent'>
+            <div class='btn-child'>
+                <button id="hash-btn" class="button"><span>Hash </span></button>
+            </div>
+            <div class='text-child'>
+                <div>
+                    <label for="hash">Hash</label>
+                    <input type="text" id="hash" name="hash" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label for="key">Private Key</label>
+            <input type="text" id="key" name="key">
+        </div>
+        <div class='parent'>
+            <div class='btn-child'>
+                <button id="sign-btn" class="button"><span>Sign </span></button>
+            </div>
+            <div class='text-child'>
+                <div>
+                    <label for="signature">Signature</label>
+                    <input type="text" id="signature" name="signature" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let message = document.querySelector('#message');
+            let key = document.querySelector('#key');
+            let hash_btn = document.querySelector('#hash-btn');
+            let hash = document.querySelector('#hash');
+            let sign_btn = document.querySelector('#sign-btn');
+            let signature = document.querySelector('#signature');
+            let alert = document.querySelector('#alert');
+            let hashBuffer;
+            hash_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                hash.value = '';
+                try {
+                    if (message.value) {
+                        //hashBuffer = keccak256(message.value);
+                        hashBuffer = etherskeccak.keccak256(utils.toUtf8Bytes(message.value)).substring(2);
+                        hash.value = hashBuffer.toString('hex');
+                    } else {
+                        alert.innerHTML = "Message is missing!";
+                    }
+                } catch (err) {
+                    alert.innerHTML = "Sorry, something wrong!";
+                }
+            });
+
+            sign_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                try {
+                    if (hash.value && key.value) {
+                        var EC = elliptic.ec;
+                        var ec = new EC('secp256k1');
+                        var keyObj = ec.keyFromPrivate(key.value);
+                        var sign = keyObj.sign(hashBuffer);
+                        var derSign = sign.toDER('hex');
+                        signature.value = derSign;
+                    } else {
+                        alert.innerHTML = "Private Key or Hash are missing!";
+                    }
+                } catch (err) {
+                    alert.innerHTML = "Sorry, something wrong!";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

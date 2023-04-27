@@ -1,0 +1,89 @@
+<html>
+
+<head>
+    <!--<script src="..\common\keccak256.js"></script>-->
+    <script src="..\common\ethers-keccak.js"></script>
+    <script type="text/javascript" src="..\common\js-graph-it.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body onload="initPageObjects();">
+    <div>
+        <h2>PoW</h2>
+    </div>
+
+    <div class="canvas" id="mainCanvas" style="height: 340px">
+        <div class="block" id="h1_block">
+            <div>Block 0</div>
+            <div class="header">Header
+                <input type="text" id="h1" name="input" disabled>
+                <input type="text" id="nonce1" placeholder="Nonce" disabled>
+            </div>
+            <div class="data">Data
+                <div>GENESIS</div>
+            </div>
+        </div>
+        <div class="block" id="h2_block" style="left: 300px">
+            <div>Block 1</div>
+            <div class="header">Header
+                <input type="text" id="h2" name="input" disabled>
+                <input type="text" id="nonce2" name="nonce" placeholder="Nonce" class="modifiable">
+            </div>
+            <div class="data">Data
+                <div>Transaction 1</div>
+                <div>Transaction 2</div>
+                <div>Transaction 3</div>
+            </div>
+        </div>
+        <div class="connector h1_block h2_block">
+            <img src="arrow.gif" class="connector-start">
+            <img src="arrow.gif" class="connector-end">
+        </div>
+    </div>
+    <div>
+        <button id="button" class="button" style="vertical-align:middle"><span>Solution </span></button>
+    </div>
+    <script>
+        function recomputeHashes() {
+            let h1 = document.querySelector('#h1');
+            let h2 = document.querySelector('#h2');
+            let nonce2 = document.querySelector('#nonce2').value;
+
+            var message = nonce2 + '#' + h1.value + '#Transaction 1#Transaction 2#Transaction 3';
+            let newHash = etherskeccak.keccak256(utils.toUtf8Bytes(message)).substring(2);
+            if (newHash !== h2.value) {
+                if (newHash.indexOf('000') == 0) {
+                    h2.classList.remove("ko");
+                    h2.classList.add("ok");
+                } else {
+                    h2.classList.remove("ok");
+                    h2.classList.add("ko");
+                }
+                h2.value = newHash;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let h1 = document.querySelector('#h1');
+            h1.classList.add("ok");
+            let nonce1 = document.querySelector('#nonce1');
+            nonce1.value = 966;
+            h1.value = etherskeccak.keccak256(utils.toUtf8Bytes('966#GENESIS')).substring(2);
+            recomputeHashes();
+            let inputs = document.getElementsByClassName('modifiable');
+            for (input of inputs) {
+                input.addEventListener('input', function () {
+                    recomputeHashes();
+                });
+            };
+            let btn = document.querySelector('#button');
+            btn.addEventListener('click', function (event) {
+                let nonce = document.querySelector('#nonce2');
+                nonce.value = "1314";
+                recomputeHashes();
+            });
+        });
+    </script>
+</body>
+
+</html>

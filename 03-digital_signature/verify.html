@@ -1,0 +1,66 @@
+<html>
+
+<head>
+    <script src="..\common\elliptic.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div><h2>Message Verifying</h2></div>
+    <div id="content">
+        <div>
+            <label for="hash">Message Hash</label>
+            <input type="text" id="hash" name="hash">
+        </div>
+        <div>
+            <label for="key">Signature</label>
+            <input type="text" id="signature" name="signature">
+        </div>
+        <div>
+            <label for="key">Public Key</label>
+            <input type="text" id="key" name="key">
+        </div>
+        <div class='parent'>
+            <div class='btn-child'>
+                <button id="verify-btn" class="button"><span>Verify </span></button>
+            </div>
+            <div class='text-child'>
+                <label for="result">Signature</label>
+                <input type="text" id="result" name="result" disabled>
+            </div>
+        </div>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let hash = document.querySelector('#hash');
+            let signature = document.querySelector('#signature');
+            let key = document.querySelector('#key');
+            let verify_btn = document.querySelector('#verify-btn');
+            let alert = document.querySelector('#alert');
+            verify_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                result.value = '';
+                try {
+                    if (hash.value && signature.value && key.value) {
+                        var EC = elliptic.ec;
+                        var ec = new EC('secp256k1');
+                        var keyPub = ec.keyFromPublic(key.value, 'hex');
+                        if (keyPub.verify(hash.value, signature.value)) {
+                            result.value = 'Signature is VALID';
+                        } else {
+                            result.value = 'INVALID Signature';
+                        }
+                    } else {
+                        alert.innerHTML = "Hash, Signature or Public Key are missing!";
+                    }
+                } catch (err) {
+                    result.value = 'INVALID Signature';
+                    alert.innerHTML = err.message;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

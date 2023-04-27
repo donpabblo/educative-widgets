@@ -1,0 +1,48 @@
+<html>
+
+<head>
+    <script src="..\common\ethers.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>Seed Phrase</h2>
+    </div>
+    <div id="content">
+        <div>
+            <label for="mnemonic">Mnemonic</label>
+            <input type="text" id="mnemonic" name="mnemonic">
+        </div>
+        <button id="pk-btn" class="button"><span>Recover </span></button>
+        <div>
+            <label for="privatekeyrec">Recovered Private Key</label>
+            <input type="text" id="privatekeyrec" name="privatekeyrec">
+        </div>
+        <div class="alert" id="alert"></div>
+        <div class="success" id="success"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let mnemonic = document.querySelector('#mnemonic');
+            let privatekeyrec = document.querySelector('#privatekeyrec');
+            let pk_btn = document.querySelector('#pk-btn');
+            let alert = document.querySelector('#alert');
+            let success = document.querySelector('#success');
+
+            pk_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                success.innerHTML = "";
+                privatekeyrec.value = "";
+                try {
+                    var wallet = ethers.Wallet.fromMnemonic(mnemonic.value);
+                    privatekeyrec.value = wallet.privateKey;
+                } catch (err) {
+                    alert.innerHTML = err;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

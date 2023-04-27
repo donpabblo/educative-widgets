@@ -1,0 +1,74 @@
+<html>
+
+<head>
+    <script src="..\common\crypto-js.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div><h2>Symmetric Decrypt</h2></div>
+    <div id="content">
+        <div>
+            <label for="key">Key*</label>
+            <input type="text" id="key" name="key">
+        </div>
+        <div>
+            <label for="encrypted">Encrypted Message*</label>
+            <input type="text" id="encrypted" name="encrypted">
+        </div>
+        <div class='parent'>
+            <div class='btn-child'>
+                <button id="button" class="button" style="vertical-align:middle"><span>Decrypt </span></button>
+            </div>
+            <div class='text-child'>
+                <label for="message">Original Message</label>
+                <input type="text" id="message" name="message" disabled>
+            </div>
+        </div>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        function toHex(str) {
+            var hex, i;
+            var result = "";
+            for (i = 0; i < str.length; i++) {
+                hex = str.charCodeAt(i).toString(16);
+                result += ("000" + hex).slice(-4);
+            }
+            return result
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let key = document.querySelector('#key');
+            let message = document.querySelector('#message');
+            let encrypted = document.querySelector('#encrypted');
+            let alert = document.querySelector('#alert');
+            let btn = document.querySelector('#button');
+            btn.addEventListener('click', function (event) {
+                alert.innerHTML = '';
+                message.value = '';
+                if (key.value && encrypted.value) {
+                    try {
+                        const keyutf = CryptoJS.enc.Utf8.parse(toHex(key.value));
+                        const iv = CryptoJS.enc.Base64.parse(toHex(key.value));
+                        let decryptedMsg = CryptoJS.AES.decrypt({ ciphertext: CryptoJS.enc.Base64.parse(encrypted.value) }, keyutf, { iv });
+                        let originalMessage = CryptoJS.enc.Utf8.stringify(decryptedMsg);
+                        if (originalMessage) {
+                            message.value = originalMessage;
+                        } else {
+                            alert.innerHTML = "Unable to decrypt the message!";
+                        }
+                    } catch (err) {
+                        console.log(err.message);
+                        alert.innerHTML = "Something wrong!";
+                    }
+                } else {
+                    alert.innerHTML = "Key or Encrypted message are missing!";
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

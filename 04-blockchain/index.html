@@ -1,0 +1,129 @@
+<html>
+
+<head>
+    <!--<script src="..\common\keccak256.js"></script>-->
+    <script src="..\common\ethers-keccak.js"></script>
+    <script type="text/javascript" src="..\common\js-graph-it.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body onload="initPageObjects();">
+    <div>
+        <h2>Blockchain</h2>
+    </div>
+
+    <div class="canvas" id="mainCanvas" style="height: 300px">
+        <div class="block" id="h1_block">
+            <div>Block 0</div>
+            <div class="header">Header
+                <input type="text" id="h1" name="input" disabled>
+            </div>
+            <div class="data">Data
+                <div>GENESIS</div>
+            </div>
+        </div>
+        <div class="block" id="h2_block" style="left: 300px">
+            <div>Block 1</div>
+            <div class="header">Header
+                <input type="text" id="h2" name="input" disabled>
+            </div>
+            <div class="data">Data
+                <input type="text" id="t1" name="input" class="modifiable">
+                <input type="text" id="t2" name="input" class="modifiable">
+                <input type="text" id="t3" name="input" class="modifiable">
+            </div>
+        </div>
+        <div class="block" id="h3_block" style="left: 600px">
+            <div>Block 2</div>
+            <div class="header">Header
+                <input type="text" id="h3" name="input" disabled>
+            </div>
+            <div class="data">Data
+                <input type="text" id="t4" name="input" class="modifiable">
+                <input type="text" id="t5" name="input" class="modifiable">
+                <input type="text" id="t6" name="input" class="modifiable">
+            </div>
+        </div>
+        <div class="block" id="h4_block" style="left: 900px">
+            <div>Block 3</div>
+            <div class="header">Header
+                <input type="text" id="h4" name="input" disabled>
+            </div>
+            <div class="data">Data
+                <input type="text" id="t7" name="input" class="modifiable">
+                <input type="text" id="t8" name="input" class="modifiable">
+                <input type="text" id="t9" name="input" class="modifiable">
+            </div>
+        </div>
+        <div class="connector h1_block h2_block">
+            <img src="arrow.gif" class="connector-start">
+            <img src="arrow.gif" class="connector-end">
+        </div>
+        <div class="connector h2_block h3_block">
+            <img src="arrow.gif" class="connector-start">
+            <img src="arrow.gif" class="connector-end">
+        </div>
+        <div class="connector h3_block h4_block">
+            <img src="arrow.gif" class="connector-start">
+            <img src="arrow.gif" class="connector-end">
+        </div>
+    </div>
+    <script>
+        const block = {
+            0: "GENESIS",
+            1: [1, 2, 3],
+            2: [4, 5, 6],
+            3: [7, 8, 9]
+        }
+        function calculateHash(blockNum) {
+            let transactions = "";
+            for (tr of block[blockNum]) {
+                let currTr = document.querySelector('#t' + tr);
+                transactions += currTr.value + "#";
+            }
+            let previousHash = document.querySelector('#h' + blockNum);
+            //let hash = keccak256(transactions + previousHash.value).toString('hex');
+            let hash = etherskeccak.keccak256(utils.toUtf8Bytes(transactions + previousHash.value)).substring(2);
+            return hash;
+        }
+
+        function recomputeHashes() {
+            for (var i = 2; i <= 4; i++) {
+                let header = document.querySelector('#h' + i);
+                let newHash = calculateHash(i - 1);
+                if (newHash !== header.value) {
+                    header.classList.add("animation");
+                    header.value = newHash;
+                }
+            }
+
+            setTimeout(() => {
+                for (var i = 2; i <= 4; i++) {
+                    let header = document.querySelector('#h' + i);
+                    header.classList.remove("animation");
+                }
+            }, 500);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let h1 = document.querySelector('#h1');
+            //h1.value = keccak256('GENESIS').toString('hex');
+            h1.value = etherskeccak.keccak256(utils.toUtf8Bytes('GENESIS')).substring(2);
+            for (var i = 1; i <= 9; i++) {
+                let transaction = document.querySelector('#t' + i);
+                transaction.value = 'Transaction ' + i;
+            }
+            recomputeHashes();
+
+            let inputs = document.getElementsByClassName('modifiable');
+            for (input of inputs) {
+                input.addEventListener('input', function () {
+                    recomputeHashes();
+                });
+            }
+
+        });
+    </script>
+</body>
+
+</html>

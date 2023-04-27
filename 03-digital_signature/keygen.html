@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <script src="..\common\elliptic.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div><h2>Keys Generator</h2></div>
+    <div id="content">
+        <button id="gen-btn" class="button"><span>Generate </span></button>
+        <div>
+            <label for="privatekey">Private Key</label>
+            <input type="text" id="privatekey" name="privatekey">
+        </div>
+        <div>
+            <label for="publickey">Public Key</label>
+            <input type="text" id="publickey" name="publickey">
+        </div>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let privatekey = document.querySelector('#privatekey');
+            let publickey = document.querySelector('#publickey');
+            let gen_btn = document.querySelector('#gen-btn');
+            let alert = document.querySelector('#alert');
+            gen_btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                try {
+                    var EC = elliptic.ec;
+                    var ec = new EC('secp256k1');
+                    var key = ec.genKeyPair();
+                    var priv = key.getPrivate('hex');
+                    var publ = key.getPublic().encode('hex');
+                    privatekey.value = priv;
+                    publickey.value = publ;
+                } catch (err) {
+                    alert.innerHTML = "Sorry, something wrong!";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

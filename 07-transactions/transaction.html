@@ -1,0 +1,54 @@
+<html>
+
+<head>
+    <script src="..\common\ethers.js"></script>
+    <link rel="stylesheet" href="..\common\styles.css">
+</head>
+
+<body>
+    <div>
+        <h2>Transaction</h2>
+    </div>
+    <div id="content">
+        <button id="btn" class="button"><span>Sign </span></button>
+        <div>
+            <p>Signed Tx</p>
+            <p id="signedTx">...</p>
+        </div>
+        <div>
+            <p>Function selector</p>
+            <p id="funcSelect">...</p>
+        </div>
+        <div class="alert" id="alert"></div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const mnemonic = "announce room limb pattern dry unit scale effort smooth jazz weasel alcohol"
+            let btn = document.querySelector('#btn');
+            let alert = document.querySelector('#alert');
+
+            let signedTx = document.querySelector('#signedTx');
+            let funcSelect = document.querySelector('#funcSelect');
+
+            btn.addEventListener('click', function (event) {
+                alert.innerHTML = "";
+                try {
+                    const tx = {
+                        to: "0x8ba1f109551bD432803012645Ac136ddd64DBA72",
+                        value: ethers.utils.parseEther("1.0")
+                    };
+                    var walletMnemonic = ethers.Wallet.fromMnemonic(mnemonic)
+                    walletMnemonic.signTransaction(tx).then(res => {
+                        signedTx.innerHTML = res;
+                    });
+
+                    funcSelect.innerHTML = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("captureFlag(string)"));
+                } catch (err) {
+                    alert.innerHTML = "Sorry, something wrong!";
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

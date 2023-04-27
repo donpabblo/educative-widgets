@@ -1,0 +1,164 @@
+div {
+  border-radius: 5px;
+  background-color: #dfe3ee;
+  padding: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #3b5998;
+}
+
+p {
+  margin: 0px;
+}
+
+button {
+  vertical-align: middle;
+}
+
+input[type=text],
+select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+
+  transition: transform 1s;
+}
+
+.header {
+  background-color: #8b9dc3;
+  color: white;
+}
+
+.data {
+  background-color: #f7f7f7;
+}
+
+.parent {
+  display: flex;
+  padding: 0;
+}
+
+.block {
+  flex: 1;
+  margin: 20px;
+  border: #3b5998 1px solid;
+  position: absolute;
+  width: 200px;
+}
+
+.btn-child {
+  flex: 1;
+}
+
+.text-child {
+  flex: 3;
+}
+
+.alert {
+  color: red;
+}
+
+.success {
+  color: green;
+}
+
+.button {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #3b5998;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-right: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+.animation {
+  animation-duration: 0.5s;
+  animation-name: changeColor;
+}
+
+.ok {
+  background-color: rgb(66, 192, 66);
+}
+
+.ko {
+  background-color: red;
+}
+
+@keyframes changeColor {
+  from {
+    background-color: #8b9dc3;
+  }
+
+  to {
+    background-color: red;
+  }
+}
+
+.draggable {
+  position: absolute;
+  cursor: move;
+  z-index: 1;
+}
+
+.connector {
+  padding: 2px;
+  background-color: #3b5998;
+}
+
+.dock_point {
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  padding: 0px !important;
+  border: none !important;
+  margin: 0px !important;
+  position: absolute;
+  font-size: 1px;
+  visibility: hidden;
+}
+
+.flex-container {
+  display: flex;
+}
+
+.flex-child {
+  flex: 1;
+}  
+
+.flex-child:first-child {
+  margin-right: 20px;
+}
